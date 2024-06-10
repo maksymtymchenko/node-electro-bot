@@ -14,3 +14,13 @@ export const ping = async (url) => {
         return false;
     }
 }
+
+export const createListMessage = (items) => {
+    let message = 'Доступні команди:\n\n';
+
+    items.forEach((item, index) => {
+        message += `${index + 1}. ${item}\n`;
+    });
+
+    return message;
+};
