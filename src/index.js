@@ -3,10 +3,10 @@ import 'dotenv/config';
 import TelegramBot from 'node-telegram-bot-api';
 import mongoose from 'mongoose';
 
-import UserController from "./src/api/controllers/UserController.js";
+import UserController from "./api/controllers/UserController.js";
 
-import {generateUrl, ping, createListMessage} from './src/helpers.js';
-import {commands, commandsDescription} from './src/constants.js'
+import {generateUrl, ping, createListMessage, isValidIPAddress} from './helpers.js';
+import {commands, commandsDescription} from './constants.js'
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {
     polling: true
@@ -44,14 +44,18 @@ bot.onText(/\/register/, async (msg) => {
     const ipHandler = async (msg) => {
         if (msg.chat.id !== chatId) return;
 
-        const userData = {
-            userId: chatId,
-            userName: userName,
-            userIp: msg.text,
-        };
+        if (isValidIPAddress(msg.text)) {
+            const userData = {
+                userId: chatId,
+                userName: userName,
+                userIp: msg.text,
+            };
 
-        await UserController.createUser(userData);
-        await bot.sendMessage(chatId, 'ІР адресса додана! Для перевірки наявності електроенергії скористайтеся командою /check');
+            await UserController.createUser(userData);
+            await bot.sendMessage(chatId, 'ІР адресса додана! Для перевірки наявності електроенергії скористайтеся командою /check');
+        } else {
+            await bot.sendMessage(chatId, 'ІР адресса не коректна!');
+        }
         bot.removeListener('message', ipHandler);
     };
 
