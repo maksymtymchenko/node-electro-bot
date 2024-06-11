@@ -3,10 +3,10 @@ import 'dotenv/config';
 import TelegramBot from 'node-telegram-bot-api';
 import mongoose from 'mongoose';
 
-import UserController from "./api/controllers/UserController.js";
+import UserController from "./src/api/controllers/UserController.js";
 
-import {generateUrl, ping, createListMessage} from './helpers.js';
-import {commands, commandsDescription} from './constants.js'
+import {generateUrl, ping, createListMessage} from './src/helpers.js';
+import {commands, commandsDescription} from './src/constants.js'
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {
     polling: true
