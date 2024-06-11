@@ -1,18 +1,20 @@
+import 'dotenv/config';
+
 import TelegramBot from 'node-telegram-bot-api';
 import mongoose from 'mongoose';
 
 import UserController from "./api/controllers/UserController.js";
 
 import {generateUrl, ping, createListMessage} from './helpers.js';
-import {token, commands, listOfCommands, MONGO_DB_URL} from './constants.js'
+import {commands, commandsDescription} from './constants.js'
 
-const bot = new TelegramBot(token, {
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {
     polling: true
 });
 
 async function startBot() {
     try {
-        await mongoose.connect(MONGO_DB_URL);
+        await mongoose.connect(process.env.MONGO_DB_URL);
         await bot.setMyCommands(commands);
     } catch (e) {
         console.error(e);
@@ -68,16 +70,17 @@ bot.onText(/\/check/, async (msg) => {
 
     const hasElectricity = await ping(url);
 
-    if (hasElectricity) {
-        return await bot.sendMessage(chatId, 'Вітаю! У вашому будинку є електроенергія!');
+    if (!hasElectricity) {
+        return await bot.sendMessage(chatId, 'Співчуваю! Електроенергія відсутня! Тримайтеся!');
     }
+    return await bot.sendMessage(chatId, 'Вітаю! У вашому будинку є електроенергія!');
 
-    return await bot.sendMessage(chatId, 'Співчуваю! Електроенергія відсутня! Тримайтеся!');
+
 });
 
 bot.onText(/\/help/, async (msg) => {
     const chatId = msg.chat.id;
 
-    const listMessage = createListMessage(listOfCommands);
+    const listMessage = createListMessage(commandsDescription);
     await bot.sendMessage(chatId, listMessage);
 });

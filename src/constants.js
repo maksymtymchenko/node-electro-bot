@@ -1,6 +1,4 @@
 export const token = '6939538236:AAElf9-apTYmrmlLa3k982Tekrt6hbv90HE';
-
-export const MY_IP = '188.190.226.236'; // 213.110.145.247
 export const MONGO_DB_URL = 'mongodb+srv://makstimchenk:x7XEsxBQO4zHR12r@nodeelectrobot.srbz3jg.mongodb.net/?retryWrites=true&w=majority&appName=NodeElectroBot'
 
 export const commands = [
@@ -22,7 +20,7 @@ export const commands = [
     },
 ]
 
-export const listOfCommands = [
+export const commandsDescription = [
     '/start - Почати роботу з ботом',
     '/check - Перевірка наявності електроенергії в будинку',
     '/help - Список доступних команд',
